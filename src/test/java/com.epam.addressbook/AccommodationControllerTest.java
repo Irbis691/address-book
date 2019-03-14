@@ -1,5 +1,8 @@
 package com.epam.addressbook;
 
+import com.epam.addressbook.controller.AccommodationController;
+import com.epam.addressbook.model.Accommodation;
+import com.epam.addressbook.repository.AccommodationRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;

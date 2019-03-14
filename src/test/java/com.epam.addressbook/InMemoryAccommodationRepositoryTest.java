@@ -1,5 +1,7 @@
 package com.epam.addressbook;
 
+import com.epam.addressbook.model.Accommodation;
+import com.epam.addressbook.repository.InMemoryAccommodationRepository;
 import org.junit.Test;
 
 import java.time.LocalDate;
