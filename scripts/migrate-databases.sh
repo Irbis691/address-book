@@ -2,8 +2,9 @@
 set -e
 
 app_guid=`cf app $1 --guid`
-credentials=`cf curl /v2/apps/$app_guid/env | jq '.system_env_json.VCAP_SERVICES | .[] | .[] | select(.instance_name=="address-book-database") | .credentials'`
 echo $app_guid
+credentials=`cf curl /v2/apps/$app_guid/env | jq '.system_env_json.VCAP_SERVICES | .[] | .{} | select(.instance_name=="address-book-database") | .credentials'`
+echo credentials
 ip_address=`echo $credentials | jq -r '.hostname'`
 db_name=`echo $credentials | jq -r '.name'`
 db_username=`echo $credentials | jq -r '.username'`
