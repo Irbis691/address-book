@@ -3,7 +3,7 @@ set -e
 
 app_guid=`cf app $1 --guid`
 credentials=`cf curl /v2/apps/$app_guid/env | jq '.system_env_json.VCAP_SERVICES | .[] | .[] | select(.instance_name=="address-book-database") | .credentials'`
-
+echo $app_guid
 ip_address=`echo $credentials | jq -r '.hostname'`
 db_name=`echo $credentials | jq -r '.name'`
 db_username=`echo $credentials | jq -r '.username'`
@@ -16,6 +16,6 @@ cf_ssh_pid=$!
 echo "Waiting for tunnel"
 sleep 5
 
-flyway-*/flyway -url="jdbc:mysql://127.0.0.1:63306/$db_name" -locations=filesystem:$2/databases/address-book -user=$db_username -password=$db_password migrate
+#flyway-*/flyway -url="jdbc:mysql://127.0.0.1:63306/$db_name" -locations=filesystem:$2/databases/address-book -user=$db_username -password=$db_password migrate
 
 kill -STOP $cf_ssh_pid
