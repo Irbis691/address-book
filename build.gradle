@@ -33,13 +33,13 @@ dependencies {
     testCompile("org.springframework.boot:spring-boot-starter-test:$springBootVersion")
 }
 
-def devDbUrl = "jdbc:mysql://localhost:3306/address_book_dev?user=address-book&useSSL=false&useTimezone=true&serverTimezone=UTC&useLegacyDatetimeCode=false"
+def devDbUrl = "jdbc:mysql://localhost:3306/address_book_dev?user=address_book&useSSL=false&useTimezone=true&serverTimezone=UTC&useLegacyDatetimeCode=false"
 bootRun.environment([
         "WELCOME_MESSAGE": "hello",
         "SPRING_DATASOURCE_URL": devDbUrl
 ])
 
-def testDbUrl = "jdbc:mysql://localhost:3306/address_book_test?user=address-book&useSSL=false&useTimezone=true&serverTimezone=UTC&useLegacyDatetimeCode=false"
+def testDbUrl = "jdbc:mysql://localhost:3306/address_book_test?user=address_book&useSSL=false&useTimezone=true&serverTimezone=UTC&useLegacyDatetimeCode=false"
 test.environment([
         "WELCOME_MESSAGE": "Hello from test",
         "SPRING_DATASOURCE_URL": testDbUrl
@@ -47,9 +47,9 @@ test.environment([
 
 flyway {
     url = devDbUrl
-    user = "address-book"
+    user = "address_book"
     password = ""
-    locations = ["filesystem:databases/address_book/migrations"]
+    locations = ["filesystem:databases/address-book/migrations"]
 }
 
 task testClean(type: FlywayCleanTask) {
