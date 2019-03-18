@@ -1,6 +1,11 @@
+import org.flywaydb.gradle.task.FlywayCleanTask
+import org.flywaydb.gradle.task.FlywayInfoTask
+import org.flywaydb.gradle.task.FlywayMigrateTask
+
 plugins {
     id "java"
     id "org.springframework.boot" version "2.1.1.RELEASE"
+    id "org.flywaydb.flyway" version "5.2.4"
 }
 
 repositories {
@@ -9,12 +14,17 @@ repositories {
 
 ext {
     springBootVersion = '2.1.1.RELEASE'
+    mysqlConnectorJavaVersion = '8.0.11'
     jacksonDatatypeJsr310Version = '2.9.8'
     lombokVersion = '1.18.4'
 }
 
 dependencies {
     compile("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
+    compile("org.springframework.boot:spring-boot-starter-jdbc:$springBootVersion")
+
+    compile("mysql:mysql-connector-java:$mysqlConnectorJavaVersion")
+
     compile("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonDatatypeJsr310Version")
 
     annotationProcessor("org.projectlombok:lombok:$lombokVersion")
@@ -23,11 +33,45 @@ dependencies {
     testCompile("org.springframework.boot:spring-boot-starter-test:$springBootVersion")
 }
 
+def devDbUrl = "jdbc:mysql://localhost:3306/address_book_dev?user=address-book&useSSL=false&useTimezone=true&serverTimezone=UTC&useLegacyDatetimeCode=false"
 bootRun.environment([
         "WELCOME_MESSAGE": "hello",
+        "SPRING_DATASOURCE_URL": devDbUrl
 ])
 
+def testDbUrl = "jdbc:mysql://localhost:3306/address_book_test?user=address-book&useSSL=false&useTimezone=true&serverTimezone=UTC&useLegacyDatetimeCode=false"
 test.environment([
         "WELCOME_MESSAGE": "Hello from test",
+        "SPRING_DATASOURCE_URL": testDbUrl
 ])
 
+flyway {
+    url = devDbUrl
+    user = "address-book"
+    password = ""
+    locations = ["filesystem:databases/address_book/migrations"]
+}
+
+task testClean(type: FlywayCleanTask) {
+    url = testDbUrl
+}
+
+task testInfo(type: FlywayInfoTask) {
+    url = testDbUrl
+}
+
+task testMigrate(type: FlywayMigrateTask) {
+    url = testDbUrl
+}
+
+task devClean(type: FlywayCleanTask) {
+    url = devDbUrl
+}
+
+task devInfo(type: FlywayInfoTask) {
+    url = devDbUrl
+}
+
+task devMigrate(type: FlywayMigrateTask) {
+    url = devDbUrl
+}

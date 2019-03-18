@@ -1,5 +1,8 @@
 package com.epam.addressbook;
 
+import com.epam.addressbook.model.Accommodation;
+import com.epam.addressbook.repository.AccommodationRepository;
+import com.epam.addressbook.repository.JdbcAccommodationRepository;
 import com.mysql.cj.jdbc.MysqlDataSource;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,9 +39,7 @@ public class JdbcAccommodationRepositoryTest {
         Accommodation newAccommodation = new Accommodation(123, 321, LocalDate.parse("2018-01-01"), true);
         Accommodation entry = subject.create(newAccommodation).get();
 
-
         Map<String, Object> foundAccommodation = jdbcTemplate.queryForMap("SELECT * FROM ACCOMMODATION WHERE ID = ?", entry.getId());
-
 
         assertThat(foundAccommodation.get("ID")).isEqualTo(entry.getId());
         assertThat(foundAccommodation.get("ADDRESS_ID")).isEqualTo(123L);
