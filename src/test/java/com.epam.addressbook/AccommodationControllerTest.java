@@ -3,6 +3,9 @@ package com.epam.addressbook;
 import com.epam.addressbook.controller.AccommodationController;
 import com.epam.addressbook.model.Accommodation;
 import com.epam.addressbook.repository.AccommodationRepository;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
+import org.assertj.core.util.Lists;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
@@ -21,11 +24,15 @@ import static org.mockito.Mockito.*;
 public class AccommodationControllerTest {
     private AccommodationRepository accommodationRepository;
     private AccommodationController subject;
+    private final MeterRegistry meterRegistry = mock(MeterRegistry.class);
 
     @Before
     public void setUp() {
         accommodationRepository = mock(AccommodationRepository.class);
-        subject = new AccommodationController(accommodationRepository);
+        subject = new AccommodationController(accommodationRepository, meterRegistry);
+        Counter mockCounter = mock(Counter.class);
+        when(meterRegistry.counter(anyString())).thenReturn(mockCounter);
+        when(accommodationRepository.findAll()).thenReturn(Optional.of(Lists.newArrayList(new Accommodation())));
     }
 
     @Test
